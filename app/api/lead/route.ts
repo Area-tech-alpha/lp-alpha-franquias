@@ -1,4 +1,4 @@
-import { UTM_KEYS, validateLead, type LeadPayload } from "@/lib/lead";
+import { TRACKING_KEYS, validateLead, type LeadPayload, type TrackingKey } from "@/lib/lead";
 
 // Webhook de destino dos leads (configure na Vercel em Settings → Environment Variables).
 const WEBHOOK_URL = process.env.WEBHOOK_URL;
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     perfil: str(body.perfil),
     investimento: str(body.investimento),
     page_url: str(body.page_url, 2000),
-    ...(Object.fromEntries(UTM_KEYS.map((key) => [key, str(body[key])])) as Record<(typeof UTM_KEYS)[number], string>),
+    ...(Object.fromEntries(TRACKING_KEYS.map((key) => [key, str(body[key])])) as Record<TrackingKey, string>),
   };
 
   const errors = validateLead(payload);

@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { brandButtonClass } from "@/components/CtaButton";
 import {
   INVESTMENT_OPTIONS,
   PROFILE_OPTIONS,
-  UTM_KEYS,
+  TRACKING_KEYS,
   maskPhoneBR,
   validateLead,
   type LeadErrors,
@@ -20,15 +21,16 @@ const FIELD_ORDER: (keyof LeadFields)[] = ["nome", "email", "whatsapp", "perfil"
 
 const subscribeNoop = () => () => {};
 
+// font-size ≥16px em todos os breakpoints evita o zoom automático do iOS.
 const fieldClass =
-  "block h-[54px] w-full rounded-[4px] bg-field px-6 text-[17px] leading-[1.3] text-ink outline-none placeholder:text-ink/50 focus-visible:ring-2 focus-visible:ring-brand/60 aria-invalid:ring-2 aria-invalid:ring-brand lg:h-[55px] lg:text-[22px]";
+  "block h-[54px] w-full rounded-[4px] bg-field px-5 text-[17px] leading-[1.3] text-fg outline-none placeholder:text-fg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid focus-visible:outline-focus aria-invalid:outline-2 aria-invalid:outline-solid aria-invalid:outline-danger lg:h-[55px] lg:px-6 lg:text-[20px]";
 
 function Chevron() {
   return (
     <svg
       viewBox="0 0 12 8"
       aria-hidden="true"
-      className="pointer-events-none absolute top-1/2 right-6 h-2 w-3 -translate-y-1/2 text-ink"
+      className="pointer-events-none absolute top-1/2 right-5 h-2 w-3 -translate-y-1/2 text-fg lg:right-6"
       fill="none"
       stroke="currentColor"
       strokeWidth="1.6"
@@ -46,9 +48,9 @@ export function LeadForm() {
 
   // Query string lida só no client (vazia no HTML do servidor), sem setState em efeito.
   const search = useSyncExternalStore(subscribeNoop, () => window.location.search, () => "");
-  const utms = useMemo(() => {
+  const tracking = useMemo(() => {
     const params = new URLSearchParams(search);
-    return Object.fromEntries(UTM_KEYS.map((key) => [key, params.get(key) ?? ""]));
+    return Object.fromEntries(TRACKING_KEYS.map((key) => [key, params.get(key) ?? ""]));
   }, [search]);
 
   function update(name: keyof LeadFields, value: string) {
@@ -73,7 +75,7 @@ export function LeadForm() {
       const res = await fetch(LEAD_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, ...utms, page_url: window.location.href }),
+        body: JSON.stringify({ ...fields, ...tracking, page_url: window.location.href }),
       });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("success");
@@ -85,9 +87,9 @@ export function LeadForm() {
 
   if (status === "success") {
     return (
-      <div role="status" className="mt-[25px] rounded-[4px] bg-field px-6 py-8 text-center lg:mt-[25.5px]">
-        <p className="text-[20px] leading-[1.3] font-bold text-maroon lg:text-[22px]">Inscrição confirmada!</p>
-        <p className="mt-2 text-[16px] leading-[1.5] text-[#48433f]">
+      <div role="status" className="mt-7 rounded-[4px] bg-field px-6 py-8 text-center">
+        <p className="text-[20px] leading-[1.3] font-bold text-accent lg:text-[22px]">Inscrição confirmada!</p>
+        <p className="mt-2 text-[16px] leading-[1.5] text-fg-muted">
           Você vai receber as informações de acesso no e-mail e no WhatsApp informados.
         </p>
       </div>
@@ -96,7 +98,7 @@ export function LeadForm() {
 
   const errorText = (name: keyof LeadFields) =>
     errors[name] ? (
-      <p id={`${name}-erro`} className="mt-1 text-[13px] leading-[1.4] text-brand">
+      <p id={`${name}-erro`} className="mt-1.5 text-[14px] leading-[1.4] text-danger">
         {errors[name]}
       </p>
     ) : null;
@@ -108,12 +110,12 @@ export function LeadForm() {
     "aria-describedby": errors[name] ? `${name}-erro` : undefined,
   });
 
-  const selectClass = (value: string) => `${fieldClass} appearance-none pr-12 ${value ? "" : "text-ink/50"}`;
+  const selectClass = (value: string) => `${fieldClass} appearance-none pr-12 ${value ? "" : "text-fg-muted"}`;
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit} noValidate className="mt-[31px] lg:mt-[25.5px]">
-      {UTM_KEYS.map((key) => (
-        <input key={key} type="hidden" name={key} value={utms[key]} />
+    <form ref={formRef} onSubmit={handleSubmit} noValidate className="mt-7 lg:mt-[25.5px]">
+      {TRACKING_KEYS.map((key) => (
+        <input key={key} type="hidden" name={key} value={tracking[key]} />
       ))}
 
       <fieldset disabled={status === "loading"} className="space-y-4">
@@ -123,6 +125,7 @@ export function LeadForm() {
             {...a11y("nome")}
             type="text"
             autoComplete="name"
+            autoCapitalize="words"
             placeholder="* Nome"
             value={fields.nome}
             onChange={(e) => update("nome", e.target.value)}
@@ -137,6 +140,8 @@ export function LeadForm() {
             type="email"
             autoComplete="email"
             inputMode="email"
+            autoCapitalize="none"
+            spellCheck={false}
             placeholder="* E-mail"
             value={fields.email}
             onChange={(e) => update("email", e.target.value)}
@@ -149,8 +154,8 @@ export function LeadForm() {
           <input
             {...a11y("whatsapp")}
             type="tel"
-            autoComplete="tel-national"
-            inputMode="numeric"
+            autoComplete="tel"
+            inputMode="tel"
             placeholder="* WhatsApp"
             value={fields.whatsapp}
             onChange={(e) => update("whatsapp", e.target.value)}
@@ -169,7 +174,7 @@ export function LeadForm() {
             >
               <option value="" disabled>* Qual seu perfil?</option>
               {PROFILE_OPTIONS.map((option) => (
-                <option key={option} value={option} className="text-ink">{option}</option>
+                <option key={option} value={option}>{option}</option>
               ))}
             </select>
             <Chevron />
@@ -187,7 +192,7 @@ export function LeadForm() {
             >
               <option value="" disabled>* Quanto tem para investir?</option>
               {INVESTMENT_OPTIONS.map((option) => (
-                <option key={option} value={option} className="text-ink">{option}</option>
+                <option key={option} value={option}>{option}</option>
               ))}
             </select>
             <Chevron />
@@ -197,7 +202,7 @@ export function LeadForm() {
       </fieldset>
 
       {status === "error" && (
-        <p role="alert" className="mt-4 text-[14px] leading-[1.4] text-brand">
+        <p role="alert" className="mt-4 text-[14px] leading-[1.4] text-danger">
           Não foi possível concluir sua inscrição. Verifique sua conexão e tente novamente.
         </p>
       )}
@@ -206,10 +211,10 @@ export function LeadForm() {
         type="submit"
         disabled={status === "loading"}
         aria-busy={status === "loading"}
-        className="mt-[40px] flex min-h-[54px] w-full items-center justify-center gap-3 rounded-[4px] bg-brand px-2 py-3 text-center text-[14px] leading-[1.3] font-bold text-white uppercase transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-80 lg:mt-[51px] lg:text-[16px]"
+        className={`${brandButtonClass} mt-8 min-h-[56px] gap-3 px-3 py-3 text-center text-[14px] leading-[1.3] disabled:cursor-wait disabled:opacity-80 lg:mt-[51px] lg:text-[16px]`}
       >
         {status === "loading" && (
-          <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+          <span aria-hidden="true" className="size-4 animate-spin rounded-full border-2 border-on-brand/30 border-t-on-brand" />
         )}
         {status === "loading" ? "Enviando..." : "Garantir minha vaga gratuita na live do dia 26"}
       </button>
