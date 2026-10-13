@@ -27,10 +27,12 @@ Importe o repositório na Vercel e defina a variável de ambiente `WEBHOOK_URL`.
 | Opções dos selects e validação | `lib/lead.ts` |
 | Seções | `components/` (Header, Hero, Pillars, Learn, Signup, LeadForm, Footer, ThemeToggle, ThemeProvider) |
 | Foto dos sócios (1080×1080) | `public/hero-socios.jpg` |
-| Logo para fundo claro / escuro | `public/logo-alpha.svg` / `public/logo-alpha-dark.svg` |
+| Logo principal (1391×396, transparente) | `public/alpha-logo.png` |
+| Símbolo (selo do topo, card do formulário) | `public/alpha-simbolo.png` |
+| Favicons (gerados pelo Next) | `app/favicon.ico`, `app/icon.png` (512×512), `app/apple-icon.png` (180×180) |
 
 ## Tema
 
 A página abre sempre em light (idêntico à referência). O botão de sol/lua ativa o dark, e a escolha fica salva em `localStorage` (`alpha-theme`) via `next-themes` (`defaultTheme="light"`, `enableSystem={false}`), sem flash no carregamento.
 
-Todas as cores são tokens em `app/globals.css`. O amarelo da marca é `--brand`; em texto (labels, números da lista, data do evento) usa `--accent-text`, que hoje aponta para o mesmo amarelo.
+Todas as cores são tokens em `app/globals.css`. O amarelo da marca é `--brand` (`#FFAB00`, tom do logotipo; hover `#E69A00`); em texto (labels, números da lista, data do evento) usa `--accent-text`, que hoje aponta para o mesmo amarelo.

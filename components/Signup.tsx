@@ -1,4 +1,5 @@
 import { LeadForm } from "@/components/LeadForm";
+import { BrandSymbol } from "@/components/Logo";
 import { EVENT_TIME, EVENT_TITLE, FORM_ANCHOR } from "@/lib/event";
 
 export function Signup() {
@@ -19,7 +20,10 @@ export function Signup() {
         </div>
 
         <div className="mt-8 border border-card-border bg-card px-5 pt-6 pb-6 md:px-8 md:pt-8 lg:mt-0 lg:px-[39px] lg:pt-[28px] lg:pb-[22px]">
-          <p className="text-[18px] leading-[1.3] font-bold text-fg lg:text-[22px] lg:leading-none">{EVENT_TITLE}</p>
+          <p className="flex items-center gap-2.5 text-[18px] leading-[1.3] font-bold text-fg lg:text-[22px] lg:leading-none">
+            <BrandSymbol className="h-[20px] lg:h-[22px]" />
+            {EVENT_TITLE}
+          </p>
           <p className="mt-5 text-[17px] leading-[1.3] font-medium text-accent lg:mt-[22px] lg:text-[22px] lg:leading-[1.16]">
             26 de outubro de 2026 · {EVENT_TIME}
             <br />
