@@ -1,11 +1,31 @@
 import Image from "next/image";
 
-// As duas versões vão no HTML e o CSS mostra a do tema ativo, sem flash no carregamento.
-export function Logo({ className = "" }: { className?: string }) {
+// Logo principal (amarela, fundo transparente): igual nos temas light e dark.
+export function Logo({ className = "", preload = false }: { className?: string; preload?: boolean }) {
   return (
-    <span className={`relative block ${className}`}>
-      <Image src="/logo-alpha.svg" alt="Alpha" width={180} height={45} className="h-full w-full dark:hidden" />
-      <Image src="/logo-alpha-dark.svg" alt="Alpha" width={180} height={45} className="hidden h-full w-full dark:block" />
-    </span>
+    <Image
+      src="/alpha-logo.png"
+      alt="Alpha Assessoria"
+      width={1391}
+      height={396}
+      sizes="(min-width: 1024px) 127px, 99px"
+      loading={preload ? "eager" : "lazy"}
+      className={`w-auto ${className}`}
+    />
+  );
+}
+
+// Só o símbolo das setas, para selos, badges e elementos pequenos.
+export function BrandSymbol({ className = "" }: { className?: string }) {
+  return (
+    <Image
+      src="/alpha-simbolo.png"
+      alt=""
+      aria-hidden="true"
+      width={243}
+      height={256}
+      sizes="24px"
+      className={`w-auto shrink-0 ${className}`}
+    />
   );
 }

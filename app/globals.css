@@ -9,8 +9,8 @@
   color-scheme: light;
 
   /* Amarelo Alpha: substitui todo o vermelho da referência. */
-  --brand: #ffc400;
-  --brand-hover: #e6b000;
+  --brand: #ffab00; /* tom exato do logotipo */
+  --brand-hover: #e69a00;
   --on-brand: #111111;
   /* Amarelo usado como cor de TEXTO (labels, números, data do evento). */
   --accent-text: var(--brand);
@@ -45,7 +45,7 @@
   --fg: #ffffff;
   --fg-muted: #a3a3a3;
   --danger: #ff8a80;
-  --focus: #ffc400;
+  --focus: #ffab00;
 
   --hero-bg: #0a0a0a;
   --hero-fg: #ffffff;

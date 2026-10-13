@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CtaButton } from "@/components/CtaButton";
+import { BrandSymbol } from "@/components/Logo";
 import { EVENT_DESCRIPTION } from "@/lib/event";
 
 export function Hero() {
@@ -7,7 +8,8 @@ export function Hero() {
     <section className="bg-hero text-hero-fg">
       <div className="container-lp pt-[56px] pb-[64px] lg:grid lg:min-h-[868px] lg:grid-cols-[minmax(0,630px)_minmax(0,520px)] lg:justify-between lg:gap-x-[40px] lg:pt-[130px] lg:pb-[100px]">
         <div>
-          <p className="text-[12px] leading-[1.5] font-medium text-brand lg:text-[14px] lg:leading-[1.4]">
+          <p className="flex items-center gap-2 text-[12px] leading-[1.5] font-medium text-brand lg:text-[14px] lg:leading-[1.4]">
+            <BrandSymbol className="h-[14px] lg:h-[16px]" />
             WEBINÁRIO AOS | DIA 26 DE OUTUBRO DE 2026
           </p>
           <h1 className="mt-4 text-[clamp(2.25rem,1.75rem+2vw,3rem)] leading-[1.1] font-medium tracking-[-0.033em] lg:mt-[18px]">
