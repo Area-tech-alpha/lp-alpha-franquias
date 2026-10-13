@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-plex), "IBM Plex Sans", sans-serif;
+
+  --color-wine: #2b0a0f;
+  --color-brand: #d0021b;
+  --color-brand-hover: #b00217;
+  --color-maroon: #790309;
+  --color-muted: #6b6b6b;
+  --color-line: #d5d5d5;
+  --color-on-dark: #d5d5d5;
+  --color-soft: #f2f2f2;
+  --color-card: #faf7f5;
+  --color-field: #ededed;
+  --color-ink: #191919;
+}
+
+/* Grid da referência: 1312px de conteúdo a 1440px (54px à esquerda / 74px à direita), 15px de respiro no mobile. */
+@utility container-lp {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 15px;
+
+  @media (width >= 64rem) {
+    padding-left: 54px;
+    padding-right: 74px;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-wine);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
