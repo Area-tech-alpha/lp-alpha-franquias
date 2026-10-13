@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="45" viewBox="0 0 180 45" role="img" aria-label="Alpha">
+  <!-- Placeholder: substitua pelo logo oficial da Alpha (mesmo nome de arquivo). -->
+  <rect x="0" y="4" width="37" height="37" rx="4" fill="#D0021B"/>
+  <path d="M18.5 11 28 34h-5l-1.8-4.6h-5.4L14 34H9l9.5-23Zm0 8.2-1.6 5.6h3.2l-1.6-5.6Z" fill="#fff"/>
+  <text x="47" y="33" font-family="IBM Plex Sans, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="-1" fill="#2B0A0F">ALPHA</text>
+</svg>
