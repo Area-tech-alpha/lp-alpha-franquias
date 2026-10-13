@@ -1,16 +1,40 @@
 @import "tailwindcss";
 
-/* Tema ativo vem de <html data-theme="dark|light">, definido antes da pintura pelo script em app/layout.tsx. */
+/* Tema ativo vem de <html data-theme="light|dark"> (next-themes). Light é o padrão. */
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-/* ---- Tokens da marca Alpha ---- */
+/* ---- Tokens: light (padrão, igual à referência) ---- */
 :root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  /* Amarelo Alpha: substitui todo o vermelho da referência. */
+  --brand: #ffc400;
+  --brand-hover: #e6b000;
+  --on-brand: #111111;
+  /* Amarelo usado como cor de TEXTO (labels, números, data do evento). */
+  --accent-text: var(--brand);
+
+  --surface: #ffffff;
+  --surface-alt: #f2f2f2;
+  --card: #faf8f6;
+  --card-border: #d9d9d9;
+  --line: #e0e0e0;
+  --field: #ededed;
+  --fg: #111111;
+  --fg-muted: #6b6b6b;
+  --danger: #b42318;
+  --focus: #111111;
+
+  /* Hero: faixa escura da referência (o vinho #280000 vira preto). */
+  --hero-bg: #111111;
+  --hero-fg: #ffffff;
+  --hero-muted: #d5d5d5;
+}
+
+/* ---- Tokens: dark (opcional, via toggle) ---- */
 [data-theme="dark"] {
   color-scheme: dark;
-
-  --brand: #ffc400; /* amarelo do logotipo */
-  --brand-hover: #e6b000;
-  --on-brand: #0a0a0a;
 
   --surface: #0a0a0a;
   --surface-alt: #141414;
@@ -20,27 +44,12 @@
   --field: #222222;
   --fg: #ffffff;
   --fg-muted: #a3a3a3;
-  /* Amarelo usado como cor de TEXTO (labels, números, data). */
-  --accent-text: #ffc400;
   --danger: #ff8a80;
   --focus: #ffc400;
-}
 
-[data-theme="light"] {
-  color-scheme: light;
-
-  --surface: #ffffff;
-  --surface-alt: #f5f5f5;
-  --card: #fafafa;
-  --card-border: #e5e5e5;
-  --line: #e5e5e5;
-  --field: #ededed;
-  --fg: #0a0a0a;
-  --fg-muted: #6b6b6b;
-  /* #FFC400 em texto sobre branco não passa no WCAG AA; este tom passa (≥4.5:1 em #FFF/#F5F5F5/#FAFAFA). */
-  --accent-text: #8a6500;
-  --danger: #b42318;
-  --focus: #0a0a0a;
+  --hero-bg: #0a0a0a;
+  --hero-fg: #ffffff;
+  --hero-muted: #d5d5d5;
 }
 
 @theme inline {
@@ -49,6 +58,7 @@
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
   --color-on-brand: var(--on-brand);
+  --color-accent: var(--accent-text);
   --color-surface: var(--surface);
   --color-surface-alt: var(--surface-alt);
   --color-card: var(--card);
@@ -57,9 +67,11 @@
   --color-field: var(--field);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
-  --color-accent: var(--accent-text);
   --color-danger: var(--danger);
   --color-focus: var(--focus);
+  --color-hero: var(--hero-bg);
+  --color-hero-fg: var(--hero-fg);
+  --color-hero-muted: var(--hero-muted);
 }
 
 /* Grid da referência: 1312px de conteúdo a 1440px (54px à esquerda / 74px à direita); 20px de margem no mobile. */

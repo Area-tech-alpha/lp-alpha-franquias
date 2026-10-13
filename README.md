@@ -25,12 +25,12 @@ Importe o repositório na Vercel e defina a variável de ambiente `WEBHOOK_URL`.
 | Horário do evento, título, links de Termos/Privacidade | `lib/event.ts` |
 | Cores da marca e dos temas (dark/light) | `app/globals.css` (tokens em `:root` / `[data-theme]`) |
 | Opções dos selects e validação | `lib/lead.ts` |
-| Seções | `components/` (Header, Hero, Pillars, Learn, Signup, LeadForm, Footer, ThemeToggle) |
+| Seções | `components/` (Header, Hero, Pillars, Learn, Signup, LeadForm, Footer, ThemeToggle, ThemeProvider) |
 | Foto dos sócios (1080×1080) | `public/hero-socios.jpg` |
 | Logo para fundo claro / escuro | `public/logo-alpha.svg` / `public/logo-alpha-dark.svg` |
 
 ## Tema
 
-Dark por padrão; segue o `prefers-color-scheme` do sistema até o visitante usar o botão de sol/lua, e aí a escolha fica salva em `localStorage` (`alpha-theme`). O script em `lib/theme.ts` roda no `<head>` antes da pintura, então não há flash de tema.
+A página abre sempre em light (idêntico à referência). O botão de sol/lua ativa o dark, e a escolha fica salva em `localStorage` (`alpha-theme`) via `next-themes` (`defaultTheme="light"`, `enableSystem={false}`), sem flash no carregamento.
 
-Em texto, o amarelo vira `--accent-text`: `#FFC400` no dark e `#8A6500` no light (o `#FFC400` e o `#B38600` sobre branco não passam no WCAG AA).
+Todas as cores são tokens em `app/globals.css`. O amarelo da marca é `--brand`; em texto (labels, números da lista, data do evento) usa `--accent-text`, que hoje aponta para o mesmo amarelo.
