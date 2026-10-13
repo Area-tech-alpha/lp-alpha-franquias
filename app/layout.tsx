@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { EVENT_DESCRIPTION, EVENT_TITLE } from "@/lib/event";
-import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({
@@ -19,7 +19,7 @@ function siteUrl() {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
+  themeColor: "#FFFFFF",
 };
 
 export const metadata: Metadata = {
@@ -44,12 +44,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // data-theme é trocado pelo script antes da hidratação; o default do HTML é dark.
-    <html lang="pt-BR" data-theme="dark" className={plex.variable} suppressHydrationWarning>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
-      <body className="font-sans">{children}</body>
+    // suppressHydrationWarning: next-themes ajusta data-theme no <html> antes da hidratação.
+    <html lang="pt-BR" className={plex.variable} suppressHydrationWarning>
+      <body className="font-sans">
+        <ThemeProvider>{children}</ThemeProvider>
+      </body>
     </html>
   );
 }

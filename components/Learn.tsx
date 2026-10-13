@@ -34,7 +34,7 @@ export function Learn() {
           <h2 className="text-[clamp(2rem,1.5rem+2vw,2.875rem)] leading-[1.1] font-medium tracking-[-0.026em] text-fg">
             A verdade nua e crua sobre escalar a maior agência de marketing nichada em 2026
           </h2>
-          <p className="mt-6 text-[16px] leading-[1.5] text-fg-muted md:text-[18px] lg:mt-0 lg:text-[21px] lg:leading-[1.4]">
+          <p className="mt-6 text-[16px] leading-[1.5] text-fg md:text-[18px] lg:mt-0 lg:text-[21px] lg:leading-[1.4]">
             Athos Vilarins, fundador e CEO da Assessoria Alpha, e Pedro Dias, Diretor Operacional da Alpha, abrem
             juntos o que aplicam para fazer agência vender, dar lucro e escalar.{" "}
             <strong className="font-bold text-fg">
@@ -43,11 +43,11 @@ export function Learn() {
           </p>
         </div>
 
-        <ol className="mt-10 border-b border-line lg:mt-[50px] lg:border-b-0">
+        <ol className="mt-10 lg:mt-[50px]">
           {TOPICS.map((topic, i) => (
             <li
               key={topic.title}
-              className="grid grid-cols-[40px_minmax(0,1fr)] gap-x-3 border-t border-line py-6 md:grid-cols-[56px_minmax(0,1fr)] lg:min-h-[168.5px] lg:grid-cols-[64px_minmax(0,440fr)_minmax(0,728fr)] lg:gap-x-[40px] lg:pt-[29px] lg:pb-[29px] lg:last:min-h-[148px]"
+              className="grid grid-cols-[36px_minmax(0,1fr)] items-baseline gap-x-3 border-t border-line py-6 md:grid-cols-[56px_minmax(0,1fr)] lg:min-h-[168.5px] lg:grid-cols-[64px_minmax(0,440fr)_minmax(0,728fr)] lg:gap-x-[40px] lg:pt-[29px] lg:pb-[29px] lg:last:min-h-[148px]"
             >
               <span className="text-[22px] leading-[1.15] font-medium text-accent md:text-[26px] lg:text-[28px] lg:leading-none lg:font-normal">
                 {String(i + 1).padStart(2, "0")}
@@ -55,7 +55,7 @@ export function Learn() {
               <h3 className="text-[17px] leading-[1.3] font-bold text-fg md:text-[19px] lg:text-[22px] lg:font-medium">
                 {topic.title}
               </h3>
-              <p className="col-start-2 mt-2 text-[15px] leading-[1.5] text-fg-muted md:text-[16px] lg:col-start-3 lg:row-start-1 lg:mt-0 lg:pl-[8px] lg:text-[18px]">
+              <p className="col-span-2 mt-3 text-[15px] leading-[1.5] text-fg-muted md:col-span-1 md:col-start-2 md:text-[16px] lg:col-start-3 lg:row-start-1 lg:mt-0 lg:pl-[8px] lg:text-[18px]">
                 {topic.description}
               </p>
             </li>
