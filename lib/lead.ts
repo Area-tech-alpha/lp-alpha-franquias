@@ -15,9 +15,10 @@ export const INVESTMENT_OPTIONS = [
   "Tenho mais de 400 mil",
 ] as const;
 
-export const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
+// Parâmetros de rastreamento lidos da URL e enviados como campos ocultos.
+export const TRACKING_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid"] as const;
 
-export type UtmKey = (typeof UTM_KEYS)[number];
+export type TrackingKey = (typeof TRACKING_KEYS)[number];
 
 export type LeadFields = {
   nome: string;
@@ -27,7 +28,7 @@ export type LeadFields = {
   investimento: string;
 };
 
-export type LeadPayload = LeadFields & Record<UtmKey, string> & { page_url: string };
+export type LeadPayload = LeadFields & Record<TrackingKey, string> & { page_url: string };
 
 export type LeadErrors = Partial<Record<keyof LeadFields, string>>;
 
@@ -39,7 +40,10 @@ export function onlyDigits(value: string) {
 
 // (11) 98765-4321 / (11) 3456-7890
 export function maskPhoneBR(value: string) {
-  const d = onlyDigits(value).slice(0, 11);
+  let d = onlyDigits(value);
+  // Autofill costuma trazer o DDI (+55 11 98765-4321).
+  if (d.length > 11 && d.startsWith("55")) d = d.slice(2);
+  d = d.slice(0, 11);
   if (d.length <= 2) return d.length ? `(${d}` : "";
   if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;

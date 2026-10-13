@@ -17,6 +17,10 @@ export function ArrowIcon({ className = "" }: { className?: string }) {
   );
 }
 
+// Classes compartilhadas pelos botões da marca (âncoras e submit).
+export const brandButtonClass =
+  "flex w-full items-center justify-center gap-4 rounded-[4px] bg-brand text-on-brand font-bold uppercase transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-[3px] focus-visible:outline-focus";
+
 type CtaButtonProps = {
   children: React.ReactNode;
   className?: string;
@@ -27,7 +31,7 @@ export function CtaButton({ children, className = "" }: CtaButtonProps) {
   return (
     <a
       href={`#${FORM_ANCHOR}`}
-      className={`flex w-full items-center justify-between gap-4 rounded-[4px] bg-brand px-5 py-[18px] text-[14px] leading-[1.4] font-bold text-white uppercase transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand lg:text-[16px] ${className}`}
+      className={`${brandButtonClass} min-h-[56px] justify-between px-5 py-4 text-[14px] leading-[1.4] lg:text-[16px] ${className}`}
     >
       <span className="flex-1 text-center">{children}</span>
       <ArrowIcon />

@@ -1,27 +1,77 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-plex), "IBM Plex Sans", sans-serif;
+/* Tema ativo vem de <html data-theme="dark|light">, definido antes da pintura pelo script em app/layout.tsx. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-  --color-wine: #2b0a0f;
-  --color-brand: #d0021b;
-  --color-brand-hover: #b00217;
-  --color-maroon: #790309;
-  --color-muted: #6b6b6b;
-  --color-line: #d5d5d5;
-  --color-on-dark: #d5d5d5;
-  --color-soft: #f2f2f2;
-  --color-card: #faf7f5;
-  --color-field: #ededed;
-  --color-ink: #191919;
+/* ---- Tokens da marca Alpha ---- */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --brand: #ffc400; /* amarelo do logotipo */
+  --brand-hover: #e6b000;
+  --on-brand: #0a0a0a;
+
+  --surface: #0a0a0a;
+  --surface-alt: #141414;
+  --card: #1a1a1a;
+  --card-border: #2a2a2a;
+  --line: #2a2a2a;
+  --field: #222222;
+  --fg: #ffffff;
+  --fg-muted: #a3a3a3;
+  /* Amarelo usado como cor de TEXTO (labels, números, data). */
+  --accent-text: #ffc400;
+  --danger: #ff8a80;
+  --focus: #ffc400;
 }
 
-/* Grid da referência: 1312px de conteúdo a 1440px (54px à esquerda / 74px à direita), 15px de respiro no mobile. */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --surface: #ffffff;
+  --surface-alt: #f5f5f5;
+  --card: #fafafa;
+  --card-border: #e5e5e5;
+  --line: #e5e5e5;
+  --field: #ededed;
+  --fg: #0a0a0a;
+  --fg-muted: #6b6b6b;
+  /* #FFC400 em texto sobre branco não passa no WCAG AA; este tom passa (≥4.5:1 em #FFF/#F5F5F5/#FAFAFA). */
+  --accent-text: #8a6500;
+  --danger: #b42318;
+  --focus: #0a0a0a;
+}
+
+@theme inline {
+  --font-sans: var(--font-plex), "IBM Plex Sans", sans-serif;
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-on-brand: var(--on-brand);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-line: var(--line);
+  --color-field: var(--field);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent-text);
+  --color-danger: var(--danger);
+  --color-focus: var(--focus);
+}
+
+/* Grid da referência: 1312px de conteúdo a 1440px (54px à esquerda / 74px à direita); 20px de margem no mobile. */
 @utility container-lp {
   width: 100%;
   max-width: 1440px;
   margin-inline: auto;
-  padding-inline: 15px;
+  padding-inline: 20px;
+
+  @media (width >= 48rem) {
+    padding-inline: 40px;
+  }
 
   @media (width >= 64rem) {
     padding-left: 54px;
@@ -33,9 +83,15 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
 body {
-  background: #ffffff;
-  color: var(--color-wine);
+  background: var(--surface);
+  color: var(--fg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import { EVENT_DESCRIPTION, EVENT_TITLE } from "@/lib/event";
+import { THEME_INIT_SCRIPT } from "@/lib/theme";
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({
@@ -16,6 +17,10 @@ function siteUrl() {
     return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
   return "http://localhost:3000";
 }
+
+export const viewport: Viewport = {
+  themeColor: "#0A0A0A",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -39,7 +44,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="pt-BR" className={plex.variable}>
+    // data-theme é trocado pelo script antes da hidratação; o default do HTML é dark.
+    <html lang="pt-BR" data-theme="dark" className={plex.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="font-sans">{children}</body>
     </html>
   );
