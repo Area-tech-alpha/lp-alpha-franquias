@@ -23,17 +23,18 @@ export function Hero() {
           <CtaButton className="mt-7 lg:mt-6 lg:min-h-[65px] lg:px-6 lg:py-[21px]">Quero me inscrever na AOS</CtaButton>
         </div>
 
-        <figure className="relative mt-10 aspect-square w-full overflow-hidden md:mx-auto md:max-w-[520px] lg:mt-[10px]">
+        {/* A barra fica abaixo da arte (não sobreposta) para não cobrir os nomes dos sócios. */}
+        <figure className="mt-10 w-full md:mx-auto md:max-w-[520px] lg:mt-[10px]">
           <Image
-            src="/hero-socios.jpg"
-            alt="Choco e Athos, sócios da Alpha"
-            fill
-            sizes="(min-width: 768px) 520px, 100vw"
-            loading="eager"
-            fetchPriority="high"
-            className="object-cover object-[50%_30%]"
+            src="/hero-socios.png"
+            alt="Athos Villarins e Pedro Dias – AOS 2026"
+            width={1080}
+            height={1080}
+            preload
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="block aspect-square h-auto w-full object-cover"
           />
-          <figcaption className="absolute inset-x-0 bottom-0 bg-brand px-4 py-3 text-[15px] leading-[1.3] font-bold text-on-brand sm:text-[17px] lg:px-6 lg:py-4 lg:text-[20px]">
+          <figcaption className="bg-brand px-4 py-3 text-[15px] leading-[1.3] font-bold text-on-brand sm:text-[17px] lg:px-6 lg:py-4 lg:text-[20px]">
             Mudar de modelo é mais lucrativo do que reinventar a roda
           </figcaption>
         </figure>
