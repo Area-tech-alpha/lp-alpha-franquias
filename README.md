@@ -26,7 +26,7 @@ Importe o repositório na Vercel e defina a variável de ambiente `WEBHOOK_URL`.
 | Cores da marca e dos temas (dark/light) | `app/globals.css` (tokens em `:root` / `[data-theme]`) |
 | Opções dos selects e validação | `lib/lead.ts` |
 | Seções | `components/` (Header, Hero, Pillars, Learn, Signup, LeadForm, Footer, ThemeToggle, ThemeProvider) |
-| Foto dos sócios (1080×1080) | `public/hero-socios.jpg` |
+| Foto dos sócios (1080×1080) | `public/hero-socios.png` |
 | Logo principal (1391×396, transparente) | `public/alpha-logo.png` |
 | Símbolo (selo do topo, card do formulário) | `public/alpha-simbolo.png` |
 | Favicons (gerados pelo Next) | `app/favicon.ico`, `app/icon.png` (512×512), `app/apple-icon.png` (180×180) |

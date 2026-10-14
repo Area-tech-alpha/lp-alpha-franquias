@@ -8,7 +8,7 @@ export function Logo({ className = "", preload = false }: { className?: string; 
       alt="Alpha Assessoria"
       width={1391}
       height={396}
-      sizes="(min-width: 1024px) 127px, 99px"
+      sizes="(min-width: 1024px) 183px, 141px"
       loading={preload ? "eager" : "lazy"}
       className={`w-auto ${className}`}
     />
