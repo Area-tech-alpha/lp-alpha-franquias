@@ -23,7 +23,7 @@ export function Hero() {
           <CtaButton className="mt-7 lg:mt-6 lg:min-h-[65px] lg:px-6 lg:py-[21px]">Quero me inscrever na AOS</CtaButton>
         </div>
 
-        {/* A barra fica abaixo da arte (não sobreposta) para não cobrir os nomes dos sócios. */}
+        {/* Legenda fora da arte, alinhada à largura da imagem (como na referência), para não cobrir os nomes dos sócios. */}
         <figure className="w-full max-w-[520px] justify-self-center lg:justify-self-end">
           <Image
             src="/hero-socios.png"
@@ -34,8 +34,11 @@ export function Hero() {
             sizes="(max-width: 768px) 100vw, 50vw"
             className="block aspect-square h-auto w-full object-cover"
           />
-          <figcaption className="bg-brand px-4 py-3 text-[15px] leading-[1.3] font-bold text-on-brand sm:text-[17px] lg:px-6 lg:py-4 lg:text-[20px]">
-            Mudar de modelo é mais lucrativo do que reinventar a roda
+          <figcaption className="mt-6 lg:mt-[30px]">
+            <p className="text-[13px] leading-[1.4] text-hero-muted lg:text-[14px]">Athos Villarins / Pedro Dias</p>
+            <p className="mt-2 text-[17px] leading-[1.3] font-bold text-brand lg:mt-3 lg:text-[20px]">
+              Mudar de modelo é mais lucrativo do que reinventar a roda
+            </p>
           </figcaption>
         </figure>
       </div>

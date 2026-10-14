@@ -1,11 +1,7 @@
 @import "tailwindcss";
 
-/* Tema ativo vem de <html data-theme="light|dark"> (next-themes). Light é o padrão. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
-/* ---- Tokens: light (padrão, igual à referência) ---- */
-:root,
-[data-theme="light"] {
+/* ---- Tokens: tema único (light, igual à referência) ---- */
+:root {
   color-scheme: light;
 
   /* Amarelo Alpha: substitui todo o vermelho da referência. */
@@ -28,26 +24,6 @@
 
   /* Hero: faixa escura da referência (o vinho #280000 vira preto). */
   --hero-bg: #111111;
-  --hero-fg: #ffffff;
-  --hero-muted: #d5d5d5;
-}
-
-/* ---- Tokens: dark (opcional, via toggle) ---- */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --surface: #0a0a0a;
-  --surface-alt: #141414;
-  --card: #1a1a1a;
-  --card-border: #2a2a2a;
-  --line: #2a2a2a;
-  --field: #222222;
-  --fg: #ffffff;
-  --fg-muted: #a3a3a3;
-  --danger: #ff8a80;
-  --focus: #ffab00;
-
-  --hero-bg: #0a0a0a;
   --hero-fg: #ffffff;
   --hero-muted: #d5d5d5;
 }

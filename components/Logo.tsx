@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-// Logo principal (amarela, fundo transparente): igual nos temas light e dark.
+// Logo principal (amarela, fundo transparente).
 export function Logo({ className = "", preload = false }: { className?: string; preload?: boolean }) {
   return (
     <Image
