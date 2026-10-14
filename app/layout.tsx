@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { EVENT_DESCRIPTION, EVENT_TITLE } from "@/lib/event";
 import "./globals.css";
 
@@ -44,11 +43,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    // suppressHydrationWarning: next-themes ajusta data-theme no <html> antes da hidratação.
-    <html lang="pt-BR" className={plex.variable} suppressHydrationWarning>
-      <body className="font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+    <html lang="pt-BR" className={plex.variable}>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
