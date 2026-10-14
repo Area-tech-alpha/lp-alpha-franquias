@@ -6,8 +6,8 @@ import { EVENT_DESCRIPTION } from "@/lib/event";
 export function Hero() {
   return (
     <section className="bg-hero text-hero-fg">
-      <div className="container-lp pt-[56px] pb-[64px] lg:grid lg:min-h-[868px] lg:grid-cols-[minmax(0,630px)_minmax(0,520px)] lg:justify-between lg:gap-x-[40px] lg:pt-[130px] lg:pb-[100px]">
-        <div>
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-5 py-16 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
+        <div className="w-full lg:max-w-[560px]">
           <p className="flex items-center gap-2 text-[12px] leading-[1.5] font-medium text-brand lg:text-[14px] lg:leading-[1.4]">
             <BrandSymbol className="h-[14px] lg:h-[16px]" />
             WEBINÁRIO AOS | DIA 26 DE OUTUBRO DE 2026
@@ -24,7 +24,7 @@ export function Hero() {
         </div>
 
         {/* A barra fica abaixo da arte (não sobreposta) para não cobrir os nomes dos sócios. */}
-        <figure className="mt-10 w-full md:mx-auto md:max-w-[520px] lg:mt-[10px]">
+        <figure className="w-full max-w-[520px] justify-self-center lg:justify-self-end">
           <Image
             src="/hero-socios.png"
             alt="Athos Villarins e Pedro Dias – AOS 2026"
