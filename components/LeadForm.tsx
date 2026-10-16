@@ -6,6 +6,8 @@ import {
   INVESTMENT_OPTIONS,
   PROFILE_OPTIONS,
   maskPhoneBR,
+  suggestEmail,
+  validateField,
   validateLead,
   type LeadErrors,
   type LeadFields,
@@ -13,6 +15,9 @@ import {
 import { captureTracking, getTracking } from "@/lib/tracking";
 
 const LEAD_ENDPOINT = "/api/lead";
+
+const SERVER_ERROR = "Não conseguimos registrar sua inscrição agora. Tente novamente em instantes.";
+const NETWORK_ERROR = "Não foi possível enviar. Verifique sua conexão e tente novamente.";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -42,6 +47,7 @@ export function LeadForm() {
   const [fields, setFields] = useState<LeadFields>(EMPTY);
   const [errors, setErrors] = useState<LeadErrors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [submitError, setSubmitError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
@@ -55,21 +61,28 @@ export function LeadForm() {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: undefined }));
   }
 
+  function validateOnBlur(name: keyof LeadFields) {
+    setErrors((prev) => ({ ...prev, [name]: validateField(name, fields[name]) }));
+  }
+
+  function showErrors(found: LeadErrors) {
+    setErrors(found);
+    const firstInvalid = FIELD_ORDER.find((name) => found[name]);
+    if (firstInvalid) formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
+    return Boolean(firstInvalid);
+  }
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status === "loading") return;
 
-    const found = validateLead(fields);
-    setErrors(found);
-    const firstInvalid = FIELD_ORDER.find((name) => found[name]);
-    if (firstInvalid) {
-      formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid}"]`)?.focus();
-      return;
-    }
+    setSubmitError("");
+    if (showErrors(validateLead(fields))) return;
 
     setStatus("loading");
+    let res: Response;
     try {
-      const res = await fetch(LEAD_ENDPOINT, {
+      res = await fetch(LEAD_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -81,13 +94,31 @@ export function LeadForm() {
           website: honeypotRef.current?.value ?? "",
         }),
       });
-      if (!res.ok) throw new Error(String(res.status));
+    } catch (err) {
+      console.error("[lead] erro de rede ao enviar inscrição", err);
+      setSubmitError(NETWORK_ERROR);
+      setStatus("error");
+      return;
+    }
+
+    if (res.ok) {
       setStatus("success");
       setFields(EMPTY);
-    } catch {
-      setStatus("error");
+      return;
     }
+
+    const data = (await res.json().catch(() => null)) as { error?: string; errors?: LeadErrors } | null;
+    console.error("[lead] inscrição recusada", res.status, data);
+    if (res.status === 400) {
+      setStatus("idle");
+      if (!showErrors(data?.errors ?? {})) setSubmitError(data?.error ?? SERVER_ERROR);
+      return;
+    }
+    setSubmitError(SERVER_ERROR);
+    setStatus("error");
   }
+
+  const emailSuggestion = suggestEmail(fields.email);
 
   if (status === "success") {
     return (
@@ -112,6 +143,7 @@ export function LeadForm() {
     name,
     "aria-invalid": errors[name] ? true : undefined,
     "aria-describedby": errors[name] ? `${name}-erro` : undefined,
+    onBlur: () => validateOnBlur(name),
   });
 
   const selectClass = (value: string) => `${fieldClass} appearance-none pr-12 ${value ? "" : "text-fg-muted"}`;
@@ -153,6 +185,15 @@ export function LeadForm() {
             onChange={(e) => update("email", e.target.value)}
             className={fieldClass}
           />
+          {emailSuggestion && (
+            <button
+              type="button"
+              onClick={() => update("email", emailSuggestion)}
+              className="mt-1.5 text-left text-[14px] leading-[1.4] text-accent underline underline-offset-2"
+            >
+              Você quis dizer @{emailSuggestion.split("@")[1]}?
+            </button>
+          )}
           {errorText("email")}
         </div>
         <div>
@@ -207,9 +248,9 @@ export function LeadForm() {
         </div>
       </fieldset>
 
-      {status === "error" && (
+      {submitError && (
         <p role="alert" className="mt-4 text-[14px] leading-[1.4] text-danger">
-          Não conseguimos enviar agora. Tente novamente em instantes.
+          {submitError}
         </p>
       )}
 
