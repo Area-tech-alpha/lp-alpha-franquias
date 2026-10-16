@@ -30,6 +30,34 @@ const leadSchema = leadFieldsSchema.extend({
   user_agent: optional(1000),
 });
 
+type Debug = {
+  upstreamStatus: number | null;
+  upstreamBody: string;
+  reason: "timeout" | "network" | "http_error" | "missing_env";
+  webhookHost: string | null;
+};
+
+function hostOf(url: string) {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return "(URL inválida)";
+  }
+}
+
+// O n8n repete o id do webhook nas mensagens de erro: mascara os segmentos do path.
+function redact(text: string, url: string) {
+  let path: string[] = [];
+  try {
+    path = new URL(url).pathname.split("/").filter((part) => part.length >= 8);
+  } catch {}
+  return path.reduce((acc, part) => acc.split(part).join("***"), text);
+}
+
+function upstreamFailed(debug: Debug) {
+  return Response.json({ ok: false, error: "Não foi possível enviar agora.", debug }, { status: 502 });
+}
+
 function invalid(errors: ReturnType<typeof toLeadErrors>) {
   const error = Object.values(errors)[0] ?? "Dados inválidos.";
   return Response.json({ ok: false, error, errors }, { status: 400 });
@@ -40,7 +68,8 @@ export async function POST(request: Request) {
   const webhookUrl = process.env.WEBHOOK_URL;
   if (!webhookUrl) {
     console.error("[lead] WEBHOOK_URL não configurada");
-    return Response.json({ ok: false, error: "WEBHOOK_URL não configurada" }, { status: 500 });
+    const debug: Debug = { upstreamStatus: null, upstreamBody: "", reason: "missing_env", webhookHost: null };
+    return Response.json({ ok: false, error: "WEBHOOK_URL não configurada", debug }, { status: 500 });
   }
 
   let body: unknown;
@@ -93,12 +122,23 @@ export async function POST(request: Request) {
       signal: controller.signal,
     });
     if (!res.ok) {
-      console.error("[lead] n8n", res.status, (await res.text()).slice(0, 1000));
-      return Response.json({ ok: false, error: "Não foi possível enviar agora." }, { status: 502 });
+      const text = await res.text().catch(() => "");
+      console.error("[lead] n8n", res.status, text.slice(0, 1000));
+      return upstreamFailed({
+        upstreamStatus: res.status,
+        upstreamBody: redact(text, webhookUrl).slice(0, 300),
+        reason: "http_error",
+        webhookHost: hostOf(webhookUrl),
+      });
     }
   } catch (err) {
     console.error("[lead] falha ao enviar para o webhook", err);
-    return Response.json({ ok: false, error: "Não foi possível enviar agora." }, { status: 502 });
+    return upstreamFailed({
+      upstreamStatus: null,
+      upstreamBody: redact(String(err), webhookUrl).slice(0, 300),
+      reason: controller.signal.aborted ? "timeout" : "network",
+      webhookHost: hostOf(webhookUrl),
+    });
   } finally {
     clearTimeout(timeout);
   }
