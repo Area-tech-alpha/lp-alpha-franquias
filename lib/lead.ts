@@ -59,49 +59,6 @@ export function maskPhoneBR(value: string) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-// ---------- Nome ----------
-
-const NAME_CHARS = /^[\p{L}' -]+$/u;
-const BLOCKED_NAME_WORDS = new Set(["asdf", "qwerty", "teste", "test", "fulano", "ciclano", "xxx"]);
-const NAME_PARTICLES = new Set(["da", "de", "do", "das", "dos"]);
-
-function stripAccents(value: string) {
-  return value.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
-}
-
-function collapseSpaces(value: string) {
-  return value.trim().replace(/\s+/g, " ");
-}
-
-function nameError(name: string): string | null {
-  if (!name) return "Informe seu nome completo.";
-  if (!NAME_CHARS.test(name)) return "Use apenas letras no nome.";
-  const words = name.split(" ");
-  if (words.length < 2) return "Informe nome e sobrenome.";
-  const plain = stripAccents(name);
-  if (plain.includes("asdf") || plain.includes("qwerty")) return "Informe seu nome real.";
-  for (const word of words) {
-    const letters = stripAccents(word).replace(/['-]/g, "");
-    if (letters.length < 2) return "Informe nome e sobrenome completos.";
-    if (BLOCKED_NAME_WORDS.has(letters) || /^(\p{L})\1+$/u.test(letters) || /(\p{L})\1\1/u.test(letters))
-      return "Informe seu nome real.";
-  }
-  return null;
-}
-
-// "maria DA silva" → "Maria da Silva"
-function titleCase(name: string) {
-  return name
-    .toLocaleLowerCase("pt-BR")
-    .split(" ")
-    .map((word, i) =>
-      i > 0 && NAME_PARTICLES.has(word)
-        ? word
-        : word.replace(/(^|[-'])(\p{L})/gu, (_, sep: string, letter: string) => sep + letter.toLocaleUpperCase("pt-BR")),
-    )
-    .join(" ");
-}
-
 // ---------- E-mail ----------
 
 const EMAIL_TYPOS: Record<string, string> = {
@@ -176,14 +133,11 @@ function parseWhatsapp(value: string): { ok: true; number: string } | { ok: fals
 // ---------- Schemas ----------
 
 export const leadFieldsSchema = z.object({
+  // Nome é livre: só precisa estar preenchido.
   nome: z
-    .string({ error: "Informe seu nome completo." })
-    .transform(collapseSpaces)
-    .superRefine((value, ctx) => {
-      const error = nameError(value);
-      if (error) ctx.addIssue({ code: "custom", message: error });
-    })
-    .transform(titleCase),
+    .string({ error: "Informe seu nome." })
+    .transform((value) => value.trim().replace(/\s+/g, " "))
+    .pipe(z.string().min(1, "Informe seu nome.")),
   email: z
     .string({ error: "Informe um e-mail válido." })
     .trim()
