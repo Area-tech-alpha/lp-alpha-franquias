@@ -1,16 +1,16 @@
 "use client";
 
-import { useMemo, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState } from "react";
 import { brandButtonClass } from "@/components/CtaButton";
 import {
   INVESTMENT_OPTIONS,
   PROFILE_OPTIONS,
-  TRACKING_KEYS,
   maskPhoneBR,
   validateLead,
   type LeadErrors,
   type LeadFields,
 } from "@/lib/lead";
+import { captureTracking, getTracking } from "@/lib/tracking";
 
 const LEAD_ENDPOINT = "/api/lead";
 
@@ -18,8 +18,6 @@ type Status = "idle" | "loading" | "success" | "error";
 
 const EMPTY: LeadFields = { nome: "", email: "", whatsapp: "", perfil: "", investimento: "" };
 const FIELD_ORDER: (keyof LeadFields)[] = ["nome", "email", "whatsapp", "perfil", "investimento"];
-
-const subscribeNoop = () => () => {};
 
 // font-size ≥16px em todos os breakpoints evita o zoom automático do iOS.
 const fieldClass =
@@ -45,13 +43,12 @@ export function LeadForm() {
   const [errors, setErrors] = useState<LeadErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const formRef = useRef<HTMLFormElement>(null);
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
-  // Query string lida só no client (vazia no HTML do servidor), sem setState em efeito.
-  const search = useSyncExternalStore(subscribeNoop, () => window.location.search, () => "");
-  const tracking = useMemo(() => {
-    const params = new URLSearchParams(search);
-    return Object.fromEntries(TRACKING_KEYS.map((key) => [key, params.get(key) ?? ""]));
-  }, [search]);
+  // Guarda as UTMs do primeiro acesso para não se perderem em refresh/navegação.
+  useEffect(() => {
+    captureTracking();
+  }, []);
 
   function update(name: keyof LeadFields, value: string) {
     setFields((prev) => ({ ...prev, [name]: name === "whatsapp" ? maskPhoneBR(value) : value }));
@@ -75,7 +72,14 @@ export function LeadForm() {
       const res = await fetch(LEAD_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...fields, ...tracking, page_url: window.location.href }),
+        body: JSON.stringify({
+          ...fields,
+          ...getTracking(),
+          page_url: window.location.href,
+          referrer: document.referrer || null,
+          user_agent: navigator.userAgent,
+          website: honeypotRef.current?.value ?? "",
+        }),
       });
       if (!res.ok) throw new Error(String(res.status));
       setStatus("success");
@@ -90,7 +94,7 @@ export function LeadForm() {
       <div role="status" className="mt-7 rounded-[4px] bg-field px-6 py-8 text-center">
         <p className="text-[20px] leading-[1.3] font-bold text-accent lg:text-[22px]">Inscrição confirmada!</p>
         <p className="mt-2 text-[16px] leading-[1.5] text-fg-muted">
-          Você vai receber as informações de acesso no e-mail e no WhatsApp informados.
+          Você vai receber o link de acesso no seu WhatsApp e e-mail.
         </p>
       </div>
     );
@@ -114,9 +118,11 @@ export function LeadForm() {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} noValidate className="mt-7 lg:mt-[25.5px]">
-      {TRACKING_KEYS.map((key) => (
-        <input key={key} type="hidden" name={key} value={tracking[key]} />
-      ))}
+      {/* Honeypot: invisível para pessoas, bots costumam preencher. */}
+      <div aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+        <label htmlFor="website">Website</label>
+        <input ref={honeypotRef} id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
 
       <fieldset disabled={status === "loading"} className="space-y-4">
         <div>
@@ -203,7 +209,7 @@ export function LeadForm() {
 
       {status === "error" && (
         <p role="alert" className="mt-4 text-[14px] leading-[1.4] text-danger">
-          Não foi possível concluir sua inscrição. Verifique sua conexão e tente novamente.
+          Não conseguimos enviar agora. Tente novamente em instantes.
         </p>
       )}
 

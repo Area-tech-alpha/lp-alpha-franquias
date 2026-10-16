@@ -15,10 +15,20 @@ export const INVESTMENT_OPTIONS = [
   "Tenho mais de 400 mil",
 ] as const;
 
-// Parâmetros de rastreamento lidos da URL e enviados como campos ocultos.
-export const TRACKING_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid"] as const;
+// Parâmetros de rastreamento lidos da URL (first-touch, ver lib/tracking.ts).
+export const TRACKING_KEYS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "fbclid",
+  "gclid",
+] as const;
 
 export type TrackingKey = (typeof TRACKING_KEYS)[number];
+
+export type Tracking = Record<TrackingKey, string | null>;
 
 export type LeadFields = {
   nome: string;
@@ -27,8 +37,6 @@ export type LeadFields = {
   perfil: string;
   investimento: string;
 };
-
-export type LeadPayload = LeadFields & Record<TrackingKey, string> & { page_url: string };
 
 export type LeadErrors = Partial<Record<keyof LeadFields, string>>;
 
