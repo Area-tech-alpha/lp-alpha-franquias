@@ -107,8 +107,13 @@ export function LeadForm() {
       return;
     }
 
-    const data = (await res.json().catch(() => null)) as { error?: string; errors?: LeadErrors } | null;
+    const data = (await res.json().catch(() => null)) as {
+      error?: string;
+      errors?: LeadErrors;
+      debug?: unknown;
+    } | null;
     console.error("[lead] inscrição recusada", res.status, data);
+    if (data?.debug) console.error("[lead] debug", data.debug);
     if (res.status === 400) {
       setStatus("idle");
       if (!showErrors(data?.errors ?? {})) setSubmitError(data?.error ?? SERVER_ERROR);
