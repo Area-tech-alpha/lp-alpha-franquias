@@ -13,7 +13,7 @@ export function Hero() {
             WEBINÁRIO AOS | DIA 26 DE OUTUBRO DE 2026
           </p>
           <h1 className="mt-4 text-[clamp(2.25rem,1.75rem+2vw,3rem)] leading-[1.1] font-medium tracking-[-0.033em] lg:mt-[18px]">
-            AOS 2026: Unidade lucrativa e escala em&nbsp;2027.
+            AOS 2026: Mude a realidade da sua Agência com o Método&nbsp;Alpha.
           </h1>
           <p className="mt-5 text-[16px] leading-[1.5] text-hero-muted lg:mt-6 lg:text-[17px]">{EVENT_DESCRIPTION}</p>
           <div className="mt-5 text-[16px] leading-[1.5] text-hero-muted lg:mt-[30px] lg:text-[17px]">
