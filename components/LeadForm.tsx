@@ -13,6 +13,8 @@ import {
   type LeadErrors,
   type LeadFields,
 } from "@/lib/lead";
+import { EVENT_TITLE } from "@/lib/event";
+import { trackLead } from "@/lib/meta-pixel";
 import { captureTracking, getTracking } from "@/lib/tracking";
 
 const LEAD_ENDPOINT = "/api/lead";
@@ -106,6 +108,8 @@ export function LeadForm() {
     if (res.ok) {
       setStatus("success");
       setFields(EMPTY);
+      // Lead só no sucesso do envio (não na /obrigado, onde acesso direto inflaria o número).
+      trackLead({ content_name: EVENT_TITLE });
       router.push("/obrigado");
       return;
     }
