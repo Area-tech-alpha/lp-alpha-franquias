@@ -9,3 +9,6 @@ export const FORM_ANCHOR = "inscricao";
 
 export const TERMS_URL = "#";
 export const PRIVACY_URL = "#";
+
+// Grupo de WhatsApp dos inscritos (botão da tela /obrigado).
+export const WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/LB2tqXcKluu94T4Jz3f153";
