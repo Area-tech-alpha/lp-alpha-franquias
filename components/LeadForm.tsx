@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { brandButtonClass } from "@/components/CtaButton";
 import {
   INVESTMENT_OPTIONS,
@@ -44,6 +45,7 @@ function Chevron() {
 }
 
 export function LeadForm() {
+  const router = useRouter();
   const [fields, setFields] = useState<LeadFields>(EMPTY);
   const [errors, setErrors] = useState<LeadErrors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -104,6 +106,7 @@ export function LeadForm() {
     if (res.ok) {
       setStatus("success");
       setFields(EMPTY);
+      router.push("/obrigado");
       return;
     }
 
@@ -130,7 +133,7 @@ export function LeadForm() {
       <div role="status" className="mt-7 rounded-[4px] bg-field px-6 py-8 text-center">
         <p className="text-[20px] leading-[1.3] font-bold text-accent lg:text-[22px]">Inscrição confirmada!</p>
         <p className="mt-2 text-[16px] leading-[1.5] text-fg-muted">
-          Você vai receber o link de acesso no seu WhatsApp e e-mail.
+          Redirecionando para o grupo do evento...
         </p>
       </div>
     );
